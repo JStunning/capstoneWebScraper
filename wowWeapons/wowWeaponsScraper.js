@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const finalList = {}
+let finalList = {}
 
 async function wowWeaponsScraper() {
   const browser = await puppeteer.launch();
@@ -13,18 +13,19 @@ async function wowWeaponsScraper() {
 
     const h1 = await page.evaluate(() => document.querySelector("h1").textContent)
 
-    let out = await page.evaluate(() => {
+    let items = await page.evaluate(() => {
       const nodelist = document.querySelectorAll("a.listview-cleartext");
       const arrayList = Array.from(nodelist);
       return arrayList.map(e => e.innerText)
     });
   
-    finalList[h1] = out;
+    finalList[h1] = items;
     console.log('h1 ', h1)
-    console.log('out', out);
+    console.log('items', items);
   
-    fs.writeFileSync("wowWeapons.json", JSON.stringify(finalList));
+    fs.writeFileSync(`${h1}.json`, JSON.stringify(finalList));
     console.log('wrote file')
+    finalList = {}
   }
 
   browser.close();

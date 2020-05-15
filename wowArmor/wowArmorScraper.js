@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const finalList = {}
+let finalList = {}
 
 async function wowArmorScraper() {
   const browser = await puppeteer.launch();
@@ -28,9 +28,9 @@ async function wowArmorScraper() {
 
     finalList[h1] = items;
 
-    console.log('h1 ', h1);
-    console.log('items non-typed', items);
-    fs.writeFileSync("armor.json", JSON.stringify(finalList));
+    fs.writeFileSync(`${h1}.json`, JSON.stringify(finalList));
+    console.log('wrote file')
+    finalList = {}
   }
 
 
@@ -39,7 +39,7 @@ async function wowArmorScraper() {
   
   for(let j = 0; j < armorTypes.length; j++){
     // const url = ['https://classic.wowhead.com/trinkets', `https://classic.wowhead.com/${armorTypes[j]}-shoulder-armor`, `https://classic.wowhead.com/shields`, 'https://classic.wowhead.com/rings', 'https://classic.wowhead.com/quiver-items', `https://classic.wowhead.com/${armorTypes[j]}-leg-armor`, `https://classic.wowhead.com/${armorTypes[j]}-head-armor`, `https://classic.wowhead.com/${armorTypes[j]}-hand-armor`, `https://classic.wowhead.com/${armorTypes[j]}-foot-armor`, 'https://classic.wowhead.com/cloaks', `https://classic.wowhead.com/${armorTypes[j]}-chest-armor`, `https://classic.wowhead.com/${armorTypes[j]}-bracers`, `https://classic.wowhead.com/${armorTypes[j]}-belts`, 'https://classic.wowhead.com/amulets']
-    const armorUrls = [ `https://classic.wowhead.com/${armorTypes[j]}-shoulder-armor`, `https://classic.wowhead.com/${armorTypes[j]}-leg-armor`, `https://classic.wowhead.com/${armorTypes[j]}-head-armor`, `https://classic.wowhead.com/${armorTypes[j]}-hand-armor`, `https://classic.wowhead.com/${armorTypes[j]}-hand-armor`, `https://classic.wowhead.com/${armorTypes[j]}-foot-armor`, `https://classic.wowhead.com/${armorTypes[j]}-chest-armor`, `https://classic.wowhead.com/${armorTypes[j]}-bracers`, ]
+    const armorUrls = [ `https://classic.wowhead.com/${armorTypes[j]}-shoulder-armor`, `https://classic.wowhead.com/${armorTypes[j]}-leg-armor`, `https://classic.wowhead.com/${armorTypes[j]}-head-armor`, `https://classic.wowhead.com/${armorTypes[j]}-hand-armor`, `https://classic.wowhead.com/${armorTypes[j]}-foot-armor`, `https://classic.wowhead.com/${armorTypes[j]}-chest-armor`, `https://classic.wowhead.com/${armorTypes[j]}-bracers`, ]
  
     for (let i = 0; i < armorUrls.length; i++){
       await page.goto(armorUrls[i]);
@@ -54,9 +54,9 @@ async function wowArmorScraper() {
 
       finalList[h1] = items;
     
-      console.log('h1 ', h1)
-      console.log('items armor', items);
-      fs.writeFileSync("armor.json", JSON.stringify(finalList));
+      fs.writeFileSync(`${h1}.json`, JSON.stringify(finalList));
+      console.log('wrote file')
+      finalList = {}
     }
   }
 

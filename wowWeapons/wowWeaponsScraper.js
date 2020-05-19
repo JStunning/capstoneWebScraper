@@ -1,5 +1,37 @@
 const puppeteer = require('puppeteer');
-const fs = require('fs');
+// const fs = require('fs');
+const express = require('express')
+const bodyParser = require("body-parser")
+const app = express();
+app.use(bodyParser.json());
+const path = require('path')
+const fetch = require("node-fetch");
+
+const db = require("../db");
+const collection = "items"
+
+app.get('/getItems', (req,res) => {
+  db.getDB().collection(collection).find({}).toArray((err, documents) => {
+    if(err){
+      console.log(err);
+    } else {
+      console.log
+      console.log("documents ",documents)
+      res.json(documents);
+    }
+  })
+})
+
+db.connect((err) => {
+  if(err){
+    console.log('unable to connect to database');
+    process.exit(1);
+  } else {
+    app.listen(3000, ()=> {
+      console.log('connected to database, app listening on port 3000');
+    });
+  }
+})
 
 let finalList = {}
 
@@ -23,8 +55,23 @@ async function wowWeaponsScraper() {
     console.log('h1 ', h1)
     console.log('items', items);
   
-    fs.writeFileSync(`${h1}.json`, JSON.stringify(finalList));
-    console.log('wrote file')
+    // fs.writeFileSync(`${h1}.json`, JSON.stringify(finalList));
+    // console.log('wrote file')
+    const setItemsInDB = () => {
+      app.post('/', (res) => {
+        const userInput = JSON.stringify({h1 : items});
+        db.getDB().collection(collection).insertOne(userInput, (err, result) => {
+          if(err){
+            console.log(err);
+          } else {
+            res.json({result : result, document : result.ops[0]})
+          }
+        })
+      })
+    }
+
+    setItemsInDB();
+
     finalList = {}
   }
 
